@@ -1,3 +1,15 @@
+# User-specific files
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+*.log
+*.local*
+*.env
+*.env.*
+
+
+
 # Python-generated files
 __pycache__/
 *.py[oc]

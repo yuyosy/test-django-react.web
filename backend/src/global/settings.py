@@ -52,6 +52,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "guardian",
+    "rules.apps.AutodiscoverRulesConfig",
+    "allauth",
+    "allauth.account",
+    "allauth.headless",
     "django_vite",
     "inertia",
 ]
@@ -64,15 +69,23 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "inertia.middleware.InertiaMiddleware",
 ]
-
+APPEND_SLASH = False
 ROOT_URLCONF = "global.urls"
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "rules.permissions.ObjectPermissionBackend",
+    "guardian.backends.ObjectPermissionBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR.joinpath("core/templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -154,5 +167,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INERTIA_LAYOUT = "inertia_base.html"
 
 
-CSRF_HEADER_NAME = "HTTP_X_XSRF_TOKEN"
-CSRF_COOKIE_NAME = "XSRF-TOKEN"
+SITE_ID = 1
+HEADLESS_ONLY = True
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": "/account/verify-email/{key}",
+    "account_reset_password_from_key": "/account/password/reset/key/{key}",
+}

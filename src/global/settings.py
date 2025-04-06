@@ -28,6 +28,9 @@ environ.Env.read_env(".env")
 if env("DJANGO_APP_ENV_FILE", default=None):
     environ.Env.read_env(env("DJANGO_APP_ENV_FILE"))
 
+# Set the default environment variable for the app mode
+APP_MODE = env("DJANGO_APP_MODE", default="development")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -64,7 +67,7 @@ MIDDLEWARE = [
     "inertia.middleware.InertiaMiddleware",
 ]
 
-ROOT_URLCONF = "core.urls"
+ROOT_URLCONF = "global.urls"
 
 TEMPLATES = [
     {
@@ -81,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "core.wsgi.application"
+WSGI_APPLICATION = "global.wsgi.application"
 
 
 # Database
@@ -125,10 +128,12 @@ USE_I18N = True
 USE_TZ = True
 
 # Django Vite settings
-# https://django-vite.readthedocs.io/en/latest/
-DJANGO_VITE_DEV_MODE = DEBUG
-DJANGO_VITE_ASSETS_PATH = BASE_DIR / "frontend" / "dist"
-DJANGO_VITE_DEV_SERVER_PORT = 5173
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "dev_server_port": env.int("DJANGO_APP_VITE_DEV_SERVER_PORT", default=5173),
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -136,7 +141,9 @@ DJANGO_VITE_DEV_SERVER_PORT = 5173
 
 STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "static/"
-STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
+STATICFILES_DIRS = [
+    BASE_DIR / "frontend/dist",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -144,7 +151,7 @@ STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-INERTIA_LAYOUT = "base.html"
+INERTIA_LAYOUT = "inertia_base.html"
 
 
 CSRF_HEADER_NAME = "HTTP_X_XSRF_TOKEN"

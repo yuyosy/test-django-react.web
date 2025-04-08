@@ -46,12 +46,14 @@ ALLOWED_HOSTS = env.list("DJANGO_APP_ALLOWED_HOSTS", default=[])
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Defaults
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third-party apps
     "guardian",
     "rules.apps.AutodiscoverRulesConfig",
     "allauth",
@@ -59,6 +61,9 @@ INSTALLED_APPS = [
     "allauth.headless",
     "django_vite",
     "inertia",
+    # Local apps
+    "users",
+    "posts",
 ]
 
 MIDDLEWARE = [
@@ -72,7 +77,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "inertia.middleware.InertiaMiddleware",
 ]
-APPEND_SLASH = False
+
 ROOT_URLCONF = "global.urls"
 
 AUTHENTICATION_BACKENDS = [
@@ -173,3 +178,6 @@ HEADLESS_FRONTEND_URLS = {
     "account_confirm_email": "/account/verify-email/{key}",
     "account_reset_password_from_key": "/account/password/reset/key/{key}",
 }
+
+AUTH_USER_MODEL = "users.User"
+ACCOUNT_ADAPTER = "users.allauth.AccountAdapter"

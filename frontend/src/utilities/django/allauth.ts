@@ -75,7 +75,7 @@ export const URLs = Object.freeze({
   PROVIDER_TOKEN: '/auth/provider/token',
 
   // Auth: Sessions
-  SESSIONS: '/auth/sessions',
+  SESSIONS: '/auth/session',
 
   // Auth: WebAuthn
   REAUTHENTICATE_WEBAUTHN: '/auth/webauthn/reauthenticate',

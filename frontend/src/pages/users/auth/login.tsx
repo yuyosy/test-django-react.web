@@ -1,12 +1,8 @@
 import  { useState } from 'react';
-import { login } from '../../utilities/django/allauth';
+import { login } from '../../../utilities/django/allauth';
 
-interface Props {
-    login_url: string;
-    message: string;
-}
 
-const App = (props: Props) => {
+const App = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -37,8 +33,6 @@ const App = (props: Props) => {
     return (
         <div>
             <h1>Login Page</h1>
-            <h2>{props.login_url}</h2>
-            <span>{props.message}</span>
             <div>
                 <input
                     type="text"

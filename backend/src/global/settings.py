@@ -20,48 +20,60 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 print(BASE_DIR)
 
 # Initialize environment variables with DJANGO_APP_ prefix
-env = environ.Env(DJANGO_APP_DEBUG=(bool, True))
+env = environ.Env(
+    DJANGO_APP_DEBUG=(bool, True),
+    DJANGO_APP_ENV_FILE=(str, ""),
+    DJANGO_APP_MODE=(str, "development"),
+    DJANGO_APP_SECRET_KEY=(str, "django-insecure-default-key"),
+    DJANGO_APP_ALLOWED_HOSTS=(list, []),
+)
 
 environ.Env.read_env(".env")
 
 # Check if ENV_FILE is defined and load it if present
-if env("DJANGO_APP_ENV_FILE", default=None):
+if env("DJANGO_APP_ENV_FILE"):
     environ.Env.read_env(env("DJANGO_APP_ENV_FILE"))
 
 # Set the default environment variable for the app mode
-APP_MODE = env("DJANGO_APP_MODE", default="development")
+APP_MODE = env("DJANGO_APP_MODE")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_APP_SECRET_KEY", default="django-insecure-default-key")
+SECRET_KEY = env("DJANGO_APP_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DJANGO_APP_DEBUG", default=False)
+DEBUG = env("DJANGO_APP_DEBUG")
 
-ALLOWED_HOSTS = env.list("DJANGO_APP_ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS = env.list("DJANGO_APP_ALLOWED_HOSTS")
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Django default apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "guardian",
+    # Third-party apps
     "rules.apps.AutodiscoverRulesConfig",
     "allauth",
     "allauth.account",
     "allauth.headless",
     "django_vite",
     "inertia",
+    # User-defined apps
+    "core",
+    "users",
+    "example",
 ]
 
 MIDDLEWARE = [
+    # Django default middleware
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -69,6 +81,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Third-party middleware
     "allauth.account.middleware.AccountMiddleware",
     "inertia.middleware.InertiaMiddleware",
 ]
@@ -170,6 +183,7 @@ INERTIA_LAYOUT = "inertia_base.html"
 SITE_ID = 1
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "/account/verify-email/{key}",
-    "account_reset_password_from_key": "/account/password/reset/key/{key}",
+    # "account_confirm_email": "/account/verify-email/{key}",
+    # "account_reset_password_from_key": "/account/password/reset/key/{key}",
 }
+ACCOUNT_ADAPTER = "users.account_adapter.AccountAdapter"

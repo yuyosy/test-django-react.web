@@ -19,9 +19,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    # Django default admin
     path("admin/", admin.site.urls),
-    path("", include("core.urls")),
+    # Django middleware
     path("accounts/", include("allauth.urls")),
     path("_allauth/", include("allauth.headless.urls")),
-    path("account/", include("accounts.urls")),
+    # User-defined apps
+    path("", include("core.urls")),
+    path("users/", include("users.urls")),
+    path("example/", include("example.urls")),
 ]

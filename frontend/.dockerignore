@@ -1,0 +1,10 @@
+# Exclude all files and directories
+*
+
+# Unexecluded specific files and directories for the build context
+!src
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig*.json
+!vite.config.ts

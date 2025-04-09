@@ -1,0 +1,8 @@
+# Exclude all files and directories
+*
+
+# Unexecluded specific files and directories for the build context
+!src
+!pyproject.toml
+!uv.lock
+!requirements.txt

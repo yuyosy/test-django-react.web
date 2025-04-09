@@ -10,3 +10,10 @@ def example1(request):
             "description": "This is an example page.",
         },
     )
+
+
+def example2(request):
+    return InertiaResponse(
+        request,
+        "example/example-2/index",
+    )

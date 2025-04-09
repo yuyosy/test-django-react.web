@@ -26,6 +26,14 @@ env = environ.Env(
     DJANGO_APP_MODE=(str, "development"),
     DJANGO_APP_SECRET_KEY=(str, "django-insecure-default-key"),
     DJANGO_APP_ALLOWED_HOSTS=(list, []),
+    DJANGO_APP_DATABASE_ENGINE=(str, "django.db.backends.postgresql"),
+    DJANGO_APP_DATABASE_NAME=(str, "postgres"),
+    DJANGO_APP_DATABASE_USER=(str, ""),
+    DJANGO_APP_DATABASE_PASSWORD=(str, ""),
+    DJANGO_APP_DATABASE_HOST=(str, "localhost"),
+    DJANGO_APP_DATABASE_PORT=(int, 5432),
+    DJANGO_CONN_MAX_AGE=(int, 60),
+    DJANGO_APP_VITE_DEV_SERVER_PORT=(int, 5173),
 )
 
 environ.Env.read_env(".env")
@@ -66,6 +74,7 @@ INSTALLED_APPS = [
     "allauth.headless",
     "django_vite",
     "inertia",
+    # "storages"
     # User-defined apps
     "core",
     "users",
@@ -91,7 +100,6 @@ ROOT_URLCONF = "global.urls"
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "rules.permissions.ObjectPermissionBackend",
-    "guardian.backends.ObjectPermissionBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
@@ -116,11 +124,23 @@ WSGI_APPLICATION = "global.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": env.db(
-        "DJANGO_APP_DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
-    )
+DATABASE = {
+    "ENGINE": env("DJANGO_APP_DATABASE_ENGINE"),
+    "NAME": env("DJANGO_APP_DATABASE_NAME"),
 }
+
+if user := env("DJANGO_APP_DATABASE_USER"):
+    DATABASE.update({"USER": user})
+if password := env("DJANGO_APP_DATABASE_PASSWORD"):
+    DATABASE.update({"PASSWORD": password})
+if host := env("DJANGO_APP_DATABASE_HOST"):
+    DATABASE.update({"HOST": host})
+if port := env("DJANGO_APP_DATABASE_PORT"):
+    DATABASE.update({"PORT": port})
+if max_age := env("DJANGO_CONN_MAX_AGE"):
+    DATABASE.update({"CONN_MAX_AGE": max_age})
+
+DATABASES = {"default": DATABASE}
 
 
 # Password validation
@@ -153,13 +173,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Django Vite settings
-DJANGO_VITE = {
-    "default": {
-        "dev_mode": DEBUG,
-        "dev_server_port": env.int("DJANGO_APP_VITE_DEV_SERVER_PORT", default=5173),
-    }
-}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -177,13 +190,24 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-INERTIA_LAYOUT = "inertia_base.html"
-
-
+# Django Allauth settings
+# https://docs.allauth.org/en/latest/
 SITE_ID = 1
 HEADLESS_ONLY = True
-HEADLESS_FRONTEND_URLS = {
-    # "account_confirm_email": "/account/verify-email/{key}",
-    # "account_reset_password_from_key": "/account/password/reset/key/{key}",
-}
+HEADLESS_FRONTEND_URLS = {}
 ACCOUNT_ADAPTER = "users.account_adapter.AccountAdapter"
+
+
+# Django Vite settings
+# https://github.com/MrBin99/django-vite
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "dev_server_port": env.int("DJANGO_APP_VITE_DEV_SERVER_PORT"),
+    }
+}
+
+
+# Django Inertia settings
+# https://github.com/inertiajs/inertia-django
+INERTIA_LAYOUT = "inertia_base.html"

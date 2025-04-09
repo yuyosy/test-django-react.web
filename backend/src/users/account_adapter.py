@@ -2,7 +2,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 
 class AccountAdapter(DefaultAccountAdapter):
-    def is_open_for_signup(self, request) -> bool:
+    def is_open_for_signup(self, request):  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Checks whether or not the site is open for signups.
 

@@ -8,9 +8,10 @@ dependencies = [
     "django>=5.2",
     "django-allauth>=65.7.0",
     "django-environ>=0.12.0",
-    "django-guardian>=2.4.0",
+    "django-storages>=1.14.6",
     "django-vite>=3.1.0",
     "inertia-django>=1.2.0",
+    "psycopg[binary]>=3.2.6",
     "pydantic>=2.11.2",
     "rules>=3.5",
 ]
@@ -25,18 +26,16 @@ exclude = [
 
 [tool.ruff.lint]
 select = [
-    "E", # pycodestyle (error)
-    "F", # pyflakes
-    "B", # bugbear
+    "E",   # pycodestyle (error)
+    "F",   # pyflakes
+    "B",   # bugbear
+    "W", # pyflakes (warning)
     "B9",
-    "C4", # flake8-comprehensions
-    "SIM", # flake8-simplify
-    "I", # isort
-    "UP", # pyupgrade
-    "PIE", # flake8-pie
-    "PGH", # pygrep-hooks
-    "PYI", # flake8-pyi
+    "I",   # isort
     "RUF",
+]
+ignore = [
+    "E501", # line too long
 ]
 
 [tool.ruff.format]
